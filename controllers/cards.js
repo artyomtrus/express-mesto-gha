@@ -27,11 +27,11 @@ const createCard = (req, res) => {
 const putLike = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $addToSet: { likes: req.body.user._id } },
+    { $addToSet: { likes: req.user._id } },
     { new: true },
   )
     .then((card) => {
-      res.send({ data: card });
+      res.status(200).send({ data: card });
     })
     .catch(() => res.status(400).send({ message: 'Переданы некорректные данные для постановки лайка.' }))
     .catch(() => res.status(404).send({ message: 'Передан несуществующий _id карточки.' }))
@@ -41,7 +41,7 @@ const putLike = (req, res) => {
 const deleteLike = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $pull: { likes: req.body.user._id } },
+    { $pull: { likes: req.user._id } },
     { new: true },
   )
     .then((card) => {
