@@ -32,7 +32,7 @@ const putLike = (req, res) => {
     { new: true },
   )
     .then((card) => {
-      res.status(200).send({ data: card });
+      res.send({ data: card });
     })
     .catch(() => res.status(400).send({ message: 'Переданы некорректные данные для постановки лайка.' }))
     .catch(() => res.status(404).send({ message: 'Передан несуществующий _id карточки.' }))
