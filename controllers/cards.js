@@ -11,7 +11,8 @@ const getCards = (req, res) => {
 const deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => res.send({ data: card }))
-    .catch(() => res.status(404).send({ message: 'Карточка с указанным _id не найдена.' }));
+    .catch(() => res.status(404).send({ message: 'Карточка с указанным _id не найдена.' }))
+    .catch(() => res.status(400).send({ message: 'Переданы некорректный _id при удалении карточки.' }));
 };
 
 const createCard = (req, res) => {
