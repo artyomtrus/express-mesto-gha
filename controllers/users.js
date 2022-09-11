@@ -11,7 +11,8 @@ const getUsers = (req, res) => {
 const getUserById = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => res.send({ data: user }))
-    .catch(() => res.status(400).send({ message: 'Пользователь по указанному _id не найден.' }))
+    .catch(() => res.status(400).send({ message: 'Не корректно введен i_id пользователя' }))
+    .catch(() => res.status(404).send({ message: 'Пользователь по указанному _id не найден.' }))
     .catch((err) => res.status(500).send({ message: err }));
 };
 
