@@ -11,8 +11,9 @@ const getCards = (req, res) => {
 const deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => res.send({ data: card }))
+    .catch(() => res.status(400).send({ message: 'Переданы некорректный _id при удалении карточки.' }))
     .catch(() => res.status(404).send({ message: 'Карточка с указанным _id не найдена.' }))
-    .catch(() => res.status(400).send({ message: 'Переданы некорректный _id при удалении карточки.' }));
+    .catch((err) => res.status(500).send({ message: err }));
 };
 
 const createCard = (req, res) => {
@@ -26,8 +27,9 @@ const createCard = (req, res) => {
 };
 
 const putLike = (req, res) => {
+  const { cardId } = req.params;
   Card.findByIdAndUpdate(
-    req.params.cardId,
+    cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
