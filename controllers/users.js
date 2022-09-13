@@ -10,11 +10,11 @@ const getUsers = (req, res) => {
 
 const getUserById = (req, res) => {
   User.findById(req.params.userId)
-    .then((card) => {
-      if (card === null) {
+    .then((user) => {
+      if (user === null) {
         return res.status(404).send({ message: 'Пользователь по указанному _id не найден.' });
       }
-      return res.status(200).send({ data: card });
+      return res.status(200).send({ data: user });
     })
     .catch((err) => {
       if (res.status(400)) {
@@ -31,8 +31,13 @@ const createUser = (req, res) => {
     .then((user) => {
       res.send(user);
     })
-    .catch(() => res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя' }))
-    .catch((err) => res.status(500).send({ message: err }));
+    .catch((err) => {
+      if (res.status(400)) {
+        res.send({ message: 'Переданы не корректные данные при создании пользователя' });
+      } else {
+        res.status(500).send({ message: err });
+      }
+    });
 };
 
 const refreshUser = (req, res) => {
@@ -42,9 +47,16 @@ const refreshUser = (req, res) => {
     runValidators: true,
   })
     .then((user) => res.send({ data: user }))
-    .catch(() => res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля' }))
-    .catch(() => res.status(404).send({ message: 'Пользователь с указанным _id не найден.' }))
-    .catch((err) => res.status(500).send({ message: err }));
+    .catch((err) => {
+      if (res.status(400)) {
+        res.send({ message: 'Переданы некорректные данные при обновлении профиля' });
+      }
+      if (res.status(404)) {
+        res.send({ message: 'Пользователь с указанным _id не найден.' });
+      } else {
+        res.status(500).send({ message: err });
+      }
+    });
 };
 
 const refreshAvatar = (req, res) => {
@@ -54,9 +66,16 @@ const refreshAvatar = (req, res) => {
     runValidators: true,
   })
     .then((user) => res.send({ data: user }))
-    .catch(() => res.status(400).send({ message: 'Переданы некорректные данные при обновлении аватара.' }))
-    .catch(() => res.status(404).send({ message: 'Пользователь с указанным _id не найден.' }))
-    .catch((err) => res.status(500).send({ message: err }));
+    .catch((err) => {
+      if (res.status(400)) {
+        res.send({ message: 'Переданы некорректные данные при обновлении аватара' });
+      }
+      if (res.status(404)) {
+        res.send({ message: 'Пользователь с указанным _id не найден.' });
+      } else {
+        res.status(500).send({ message: err });
+      }
+    });
 };
 
 module.exports = {
