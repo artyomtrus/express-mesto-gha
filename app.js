@@ -10,8 +10,6 @@ app.use(bodyParser.json());
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
-  // useCreateIndex: true,
-  // useFindAndModify: false,
 });
 
 app.use((req, res, next) => {
@@ -24,6 +22,12 @@ app.use((req, res, next) => {
 
 app.use('/users', routerUsers);
 app.use('/cards', routerCards);
+
+app.use('/:url', (req, res) => {
+  if (req.params.url !== '') {
+    res.status(404).send({ message: 'Страница не существует' });
+  }
+});
 
 app.listen(3000, () => {
   console.log('Сервер запущен');
