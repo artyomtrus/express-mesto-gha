@@ -14,7 +14,7 @@ const getUserById = (req, res) => {
       if (card === null) {
         return res.status(404).send({ message: 'Пользователь по указанному _id не найден.' });
       }
-      return res.status(200).send({ data: card, message: 'DELETE' });
+      return res.status(200).send({ data: card });
     })
     .catch((err) => {
       if (res.status(400)) {
