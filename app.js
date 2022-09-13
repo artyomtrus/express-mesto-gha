@@ -22,12 +22,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/', (req, res) => {
-  if (res.status(404)) {
-    res.send({ message: 'Такой страницы не существует' });
-  }
-});
-
 app.use('/users', routerUsers);
 app.use('/cards', routerCards);
 
