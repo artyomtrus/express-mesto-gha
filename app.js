@@ -24,9 +24,7 @@ app.use('/users', routerUsers);
 app.use('/cards', routerCards);
 
 app.use('*', (req, res) => {
-  if (req.params.url !== 'users' && 'cards') {
-    res.status(404).send({ message: 'Страница не существует' });
-  }
+  res.status(404).send({ message: 'Страница не существует' });
 });
 
 app.listen(3000, () => {
