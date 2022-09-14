@@ -32,8 +32,8 @@ const createCard = (req, res) => {
       res.send({ data: card });
     })
     .catch((err) => {
-      if (res.status(400)) {
-        res.send({ message: 'Переданы некорректные данные при создании карточки.' });
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные при создании карточки.' });
       } else {
         res.status(500).send({ message: err });
       }
@@ -47,7 +47,7 @@ const putLike = (req, res) => {
     { new: true },
   )
     .then((card) => {
-      if (card === null) {
+      if (!card) {
         return res.status(404).send({ message: 'Передан несуществующий _id карточки.' });
       }
       return res.status(200).send({ data: card });
@@ -68,7 +68,7 @@ const deleteLike = (req, res) => {
     { new: true },
   )
     .then((card) => {
-      if (card === null) {
+      if (!card) {
         return res.status(404).send({ message: 'Передан несуществующий _id карточки.' });
       }
       return res.status(200).send({ data: card });
