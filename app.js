@@ -23,7 +23,7 @@ app.use((req, res, next) => {
 app.use('/users', routerUsers);
 app.use('/cards', routerCards);
 
-app.use('/:url', (req, res) => {
+app.use('*', (req, res) => {
   if (req.params.url !== 'users' && 'cards') {
     res.status(404).send({ message: 'Страница не существует' });
   }

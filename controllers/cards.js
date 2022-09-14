@@ -11,14 +11,14 @@ const getCards = (req, res) => {
 const deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
-      if (card === null) {
+      if (!card) {
         return res.status(404).send({ message: 'Карточка с указанным _id не найдена.' });
       }
       return res.status(200).send({ data: card });
     })
     .catch((err) => {
-      if (res.status(400)) {
-        res.send({ message: 'Переданы некорректный _id при удалении карточки.' });
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Переданы некорректный _id при удалении карточки.' });
       } else {
         res.status(500).send({ message: err });
       }
@@ -53,8 +53,8 @@ const putLike = (req, res) => {
       return res.status(200).send({ data: card });
     })
     .catch((err) => {
-      if (res.status(400)) {
-        res.send({ message: 'Переданы некорректные данные для постановки лайка.' });
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Переданы некорректные данные для постановки лайка.' });
       } else {
         res.status(500).send({ message: err });
       }
@@ -74,8 +74,8 @@ const deleteLike = (req, res) => {
       return res.status(200).send({ data: card });
     })
     .catch((err) => {
-      if (res.status(400)) {
-        res.send({ message: 'Переданы некорректные данные при снятии лайка.' });
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Переданы некорректные данные при снятии лайка.' });
       } else {
         res.status(500).send({ message: err });
       }
