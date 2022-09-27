@@ -16,7 +16,7 @@ const deleteCard = (req, res, next) => {
     .orFail(new NotFoundError('Карточка с указанным _id не найдена.'))
     .then((card) => {
       if (card.owner.toString() !== req.user._id) {
-        throw new IncorrectUser('Нельзя удалять чужие карточки');
+        next(new IncorrectUser('Нельзя удалять чужие карточки'));
       } else {
         Card.findByIdAndRemove(req.params.cardId)
           .then(() => res.send(card))
@@ -25,11 +25,10 @@ const deleteCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new BadRequestError('Переданы некорректный _id при удалении карточки.');
+        next(new BadRequestError('Переданы некорректный _id при удалении карточки.'));
       }
       return next(err);
-    })
-    .catch(next);
+    });
 };
 
 const createCard = (req, res, next) => {
@@ -40,11 +39,10 @@ const createCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new BadRequestError('Переданы некорректные данные при создании карточки.');
+        next(new BadRequestError('Переданы некорректные данные при создании карточки.'));
       }
       return next(err);
-    })
-    .catch(next);
+    });
 };
 
 const putLike = (req, res, next) => {
@@ -57,11 +55,10 @@ const putLike = (req, res, next) => {
     .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new BadRequestError('Переданы некорректные данные при постановке лайка.');
+        next(new BadRequestError('Переданы некорректные данные при постановке лайка.'));
       }
       return next(err);
-    })
-    .catch(next);
+    });
 };
 
 const deleteLike = (req, res, next) => {
@@ -74,11 +71,10 @@ const deleteLike = (req, res, next) => {
     .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new BadRequestError('Переданы некорректные данные при снятии лайка.');
+        next(new BadRequestError('Переданы некорректные данные при снятии лайка.'));
       }
       return next(err);
-    })
-    .catch(next);
+    });
 };
 
 module.exports = {
