@@ -1,6 +1,7 @@
 const Card = require('../models/card');
 const NotFoundError = require('../errors/not-found-error');
 const BadRequestError = require('../errors/bad-request-error');
+const IncorrectUser = require('../errors/incorrect-user');
 
 const getCards = (req, res, next) => {
   Card.find({})
@@ -15,7 +16,7 @@ const deleteCard = (req, res, next) => {
     .orFail(new NotFoundError('Карточка с указанным _id не найдена.'))
     .then((card) => {
       if (card.owner.toString() !== req.user._id) {
-        throw new BadRequestError('Нельзя удалять чужие карточки');
+        throw new IncorrectUser('Нельзя удалять чужие карточки');
       } else {
         Card.findByIdAndRemove(req.params.cardId)
           .then(() => res.send(card))
@@ -52,7 +53,7 @@ const putLike = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .orFail(new BadRequestError('Передан несуществующий _id карточки.'))
+    .orFail(new NotFoundError('Передан несуществующий _id карточки.'))
     .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -69,7 +70,7 @@ const deleteLike = (req, res, next) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
-    .orFail(new BadRequestError('Передан несуществующий _id карточки.'))
+    .orFail(new NotFoundError('Передан несуществующий _id карточки.'))
     .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
       if (err.name === 'CastError') {
