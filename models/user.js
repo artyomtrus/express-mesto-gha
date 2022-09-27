@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     select: false,
+
   },
   name: {
     type: String,
@@ -35,6 +36,11 @@ const userSchema = new mongoose.Schema({
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
   },
 
+}, {
+  toObject: {
+    useProjection: true,
+    versionKey: false,
+  },
 });
 
 userSchema.statics.findUserByCredentials = function (email, password) {
