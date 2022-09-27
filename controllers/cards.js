@@ -11,9 +11,17 @@ const getCards = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findById(req.params.cardId)
     .orFail(new NotFoundError('Карточка с указанным _id не найдена.'))
-    .then((card) => res.status(200).send({ data: card }))
+    .then((card) => {
+      if (card.owner.toString() !== req.user._id) {
+        throw new BadRequestError('Нельзя удалять чужие карточки');
+      } else {
+        Card.findByIdAndRemove(req.params.cardId)
+          .then(() => res.send(card))
+          .catch(next);
+      }
+    })
     .catch((err) => {
       if (err.name === 'CastError') {
         throw new BadRequestError('Переданы некорректный _id при удалении карточки.');
