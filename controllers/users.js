@@ -48,7 +48,7 @@ const createUser = (req, res, next) => {
     .then((hash) => User.create({
       email, password: hash, name, about, avatar,
     })
-      .then((user) => res.send(user))
+      .then((user) => res.send(user.toObject()))
       .catch((err) => {
         if (err.code === 11000) {
           throw new ConflictEmailError('Пользователь с таким email уже создан');
