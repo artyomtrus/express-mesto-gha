@@ -25,7 +25,7 @@ const deleteCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректный _id при удалении карточки.'));
+        return next(new BadRequestError('Переданы некорректный _id при удалении карточки.'));
       }
       return next(err);
     });
@@ -39,7 +39,7 @@ const createCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные при создании карточки.'));
+        return next(new BadRequestError('Переданы некорректные данные при создании карточки.'));
       }
       return next(err);
     });
@@ -52,10 +52,10 @@ const putLike = (req, res, next) => {
     { new: true },
   )
     .orFail(new NotFoundError('Передан несуществующий _id карточки.'))
-    .then((card) => res.status(200).send({ data: card }))
+    .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные при постановке лайка.'));
+        return next(new BadRequestError('Переданы некорректные данные при постановке лайка.'));
       }
       return next(err);
     });
@@ -68,10 +68,10 @@ const deleteLike = (req, res, next) => {
     { new: true },
   )
     .orFail(new NotFoundError('Передан несуществующий _id карточки.'))
-    .then((card) => res.status(200).send({ data: card }))
+    .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные при снятии лайка.'));
+        return next(new BadRequestError('Переданы некорректные данные при снятии лайка.'));
       }
       return next(err);
     });
